@@ -68,17 +68,59 @@ class Point
      }
 }
 
+class Style
+{
+     constructor(shape, fill, image)
+     {
+          this.shape = shape;
+          this.fill = fill;
+          this.image = image;
+     }
+
+     hasImage()
+     {
+          return this.image != null;
+     }
+}
+
 class UIElement
 {
-     constructor(position, dimensions)
+     constructor(style, position, dimensions)
      {
+          this.style = style;
           this.position = position;
           this.dimensions = dimensions;
      }
 
      draw(pen)
      {
-          // To be overriden in subclasses
+          pen.fillStyle = this.style.fill;
+          if(this.style.shape == RECTANGLE)
+          {
+               // Draws from the center:
+               pen.fillRect
+               (
+                    this.position.x - this.dimensions.width / 2,
+                    this.position.y - this.dimensions.height / 2,
+                    this.dimensions.width,
+                    this.dimensions.height
+               );
+          }
+          else if(this.style.shape == ELLIPSE)
+          {
+               pen.beginPath();
+               pen.ellipse
+               (
+                    this.position.x,
+                    this.position.y,
+                    this.dimensions.width,
+                    this.dimensions.height,
+                    0,
+                    0,
+                    2 * Math.PI
+               );
+               pen.fill();
+          }
      }
 }
 
@@ -87,6 +129,5 @@ class UIButton extends UIElement
      draw(pen)
      {
           super.draw(pen);
-          pen.fillRect(0, 0, 100, 100);
      }
 }
